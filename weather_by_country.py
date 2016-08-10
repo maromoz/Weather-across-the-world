@@ -6,41 +6,67 @@ import urllib
 import urllib2
 import urlparse
 import json
+import sys
+
 
 print "Welcome to the broadcast weather app"
 print "What country would you like to check the weather?"
 country = raw_input("Please enter your country name:")
-while country.isalpha() or country.isdigit():
+while country.isdigit() == False  and country.isalpha() == False or country.isalpha() or country.isdigit():
+#Checking for the user's input type(should be a country name)
+	if country.isdigit() == False  and country.isalpha() == False:
+		print "you typed wrong please try again:"
+		country = raw_input()
+		continue
 	if country.isdigit():
 		print "Oops, you typed a number,please try again"
 		country = raw_input()
 		continue
 	if country.isalpha():
 		try:
-			response = unirest.get("https://restcountries-v1.p.mashape.com/name/"+country,
-			headers={"X-Mashape-Key": "26D2fnt4QPmshTRjJ8zhI6oDR03dp11be9KjsnRxxFLkVPpVbG",
-  			  "Accept": "application/json"},params = {"body":"alpha2Code"}
-			)	
+			#Checking the user internet connection
+			attempt = 0
+			while attempt <3:
+				try:
+					response = unirest.get("https://restcountries-v1.p.mashape.com/name/"+country,
+					headers={"X-Mashape-Key": "26D2fnt4QPmshTRjJ8zhI6oDR03dp11be9KjsnRxxFLkVPpVbG",
+  					  "Accept": "application/json"}
+					)	
+					break
+				except:
+					print "your internet connection is not working, please check your internet connection"
+					attempt += 1 
+					if attempt == 3:
+						print "the program fail, please check your internt and access the program again"
+						sys.exit()
 			country_initials = response.body[0]["alpha2Code"]
 			break
 		except KeyError:
 			print "the country you typed does not exists, please type again"
 			country = raw_input()	
 			continue
+#converting the country name to the country initials for further actions
 country_initials = response.body[0]["alpha2Code"]
 data = urllib.urlopen('http://openweathermap.org/help/city_list.txt')
 cities_list = list()
 i=1
 print "The cities inside the country you have choosen"
 for line in data:
+#Appending each line that the country initials are equal to the user input
 	if country_initials == line[-3]+line[-2]:
 		elements = line.split()
 		city =  " ".join(elements[1:-3]) 
 		cities_list.append(city)
+#Printing each city of the country with a number for the user to choose from
 		print i,city
 		i+=1
 user_choice = raw_input("Please type the nubmer of city you would like to check the weather: ")
-while user_choice.isalpha() or int(user_choice) <= 0 or int(user_choice):
+while user_choice.isdigit() == False and user_choice.isalpha() == False or user_choice.isalpha() or int(user_choice):
+#Checking if the user's input is an interger and that the same interger is next to a city above
+	if user_choice.isdigit() == False and user_choice.isalpha() == False:
+		print "you typed wrong please try again:"
+		user_choice = raw_input()
+		continue
 	if user_choice.isalpha():
 		print "Oops,you did'nt typed a integer, please try again"
 		user_choice = raw_input()
@@ -63,7 +89,7 @@ while user_choice.isalpha() or int(user_choice) <= 0 or int(user_choice):
 
 
 
-
+#Taking the city that the user choose and checking all the weather attributes in the "open weather" API
 url = 'http://api.openweathermap.org/data/2.5/weather?q='+ city +'&appid=9aa4492b034cef3250be6f72629b73e9'
 values = {}
 data = urllib.urlencode(values)
