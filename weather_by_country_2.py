@@ -7,21 +7,11 @@ import urllib2
 import urlparse
 import json
 import sys
-
-
 print "Welcome to the broadcast weather app"
 print "What country would you like to check the weather?"
 country = raw_input("Please enter your country name:")
-while country.isdigit() == False  and country.isalpha() == False or country.isalpha() or country.isdigit():
-#Checking for the user's input type(should be a country name)
-        if country.isdigit() == False  and country.isalpha() == False:
-                print "you typed wrong please try again:"
-                country = raw_input()
-                continue
-        if country.isdigit():
-                print "Oops, you typed a number,please try again"
-                country = raw_input()
-                continue
+while True:
+	#Checking for the user's input type(should be a country name)
         if country.isalpha():
                 try:
                         #Checking the user internet connection
@@ -45,6 +35,10 @@ while country.isdigit() == False  and country.isalpha() == False or country.isal
                         print "the country you typed does not exists, please type again"
                         country = raw_input()
                         continue
+	else:
+		print "You typed wrong please try again:"
+		country = raw_input()
+		continue
 #converting the country name to the country initials for further actions
 data = urllib.urlopen('http://openweathermap.org/help/city_list.txt')
 cities_list = list()
@@ -60,21 +54,14 @@ for line in data:
 		#Printing each city of the country with a number for the user to choose from
                 i+=1
 user_choice = raw_input("Please type the nubmer of city you would like to check the weather: ")
-while user_choice.isdigit() == False and user_choice.isalpha() == False or user_choice.isalpha() or int(user_choice):
-#Checking if the user's input is an interger and that the same interger is next to a city above
-        if user_choice.isdigit() == False and user_choice.isalpha() == False:
-                print "you typed wrong please try again:"
-                user_choice = raw_input()
-                continue
-        if user_choice.isalpha():
-                print "Oops,you did'nt typed a integer, please try again"
-                user_choice = raw_input()
-                continue
-        if int(user_choice) <=0:
-                print "Please type a number bigger than 0"
-                user_choice = raw_input()
-                continue
-        if int(user_choice):
+while True:
+#Checking if the user's input is an interger and that the same interger is next to a city above and not equal to 0
+	if user_choice.isdigit():
+		user_choice = int(user_choice)
+		if user_choice == 0:
+			print "you typed 0, please try again:"
+			user_choice = raw_input()	
+			continue
                 try:
                         user_choice = int(user_choice) - 1
 			city = cities_list[user_choice]
@@ -84,6 +71,10 @@ while user_choice.isdigit() == False and user_choice.isalpha() == False or user_
                         print "the number you typed is unsuitable, please type again:"
                         user_choice = raw_input()
                         continue
+	else:
+		print "You typed wrong please try again:"
+		user_choice = raw_input()
+		continue
 
 
 
@@ -109,10 +100,6 @@ print "The minimum temperature in "+ city+ " is " + str(round(temp_min,1)) + "°
 temp_max = data['main']['temp_max']
 temp_max = float(temp_max-273)
 print "The maximum temperature in " +city+ " is " + str(round(temp_max,1)) + "°C"
-
-
-
-
 
 
 
