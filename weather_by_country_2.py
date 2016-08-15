@@ -56,6 +56,7 @@ while True:
 	       			print i,city
 				#Printing each city of the country with a number for the user to choose from
 	      			i+=1
+		break
 	except IOError:
 		print "your internet connection is not working, please check your internet connection"
 		attempt_2 += 1
