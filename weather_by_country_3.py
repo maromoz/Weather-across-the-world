@@ -23,35 +23,31 @@ parser.parse_args()
 options, args = parser.parse_args()
 
 country = options.country
-while True:
-	#Checking for the user's input type(should be a country name)
-        if country.isalpha():
-        	#Checking the user internet connection
-                attempt = 0
-                while attempt <3:
-                	try:
-         	               response = unirest.get("https://restcountries-v1.p.mashape.com/name/"+country,
- 	                       headers={"X-Mashape-Key": "26D2fnt4QPmshTRjJ8zhI6oDR03dp11be9KjsnRxxFLkVPpVbG",
-                   	     "Accept": "application/json"}
+#Checking for the user's input type(should be a country name)
+if country.isalpha():
+        #Checking the user internet connection
+        attempt = 0
+        while attempt <3:
+                try:
+         		response = unirest.get("https://restcountries-v1.p.mashape.com/name/"+country,
+ 	                headers={"X-Mashape-Key": "26D2fnt4QPmshTRjJ8zhI6oDR03dp11be9KjsnRxxFLkVPpVbG",
+                   	"Accept": "application/json"}
                     		    )
-                 	       break
-			except: 
-                        	print "your internet connection is not working, please check your internet connection"
-                                attempt += 1
-                                if attempt == 3:
-                                       	print "the program fail, please check your internt and access the program again"
-					sys.exit()
-		try:
-                        country_initials = response.body[0]["alpha2Code"]
-                        break
-                except KeyError:
-                        print "the country you typed does not exists, please type again"
-                        country = raw_input()
-                        continue
-	else:
-		print "You typed wrong please try again:"
-		country = raw_input()
-		continue
+                 	break
+		except: 
+                       	print "your internet connection is not working, please check your internet connection"
+                        attempt += 1
+                        if attempt == 3:
+                        	print "the program fail, please check your internt and access the program again"
+				sys.exit()
+	try:
+		country_initials = response.body[0]["alpha2Code"]
+	except KeyError: 
+		print "the country you typed does not exists, please type again"
+       	 	country = raw_input()
+else:
+		print "You typed wrong please run the program try again"
+		sys.exit()
 #converting the country name to the country initials for further actions
 attempt_2 = 0
 while True:
@@ -79,27 +75,22 @@ while True:
 		continue
 
 user_choice = raw_input("Please type the nubmer of city you would like to check the weather: ")
-while True:
 #Checking if the user's input is an interger and that the same interger is next to a city above and not equal to 0
-	if user_choice.isdigit():
-		user_choice = int(user_choice)
-		if user_choice == 0:
-			print "you typed 0, please try again:"
-			user_choice = raw_input()	
-			continue
-                try:
-                        user_choice = int(user_choice) - 1
-			city = cities_list[user_choice]
-                        city = city.strip().replace(" ", "-")
-                        break
-                except IndexError:
-                        print "the number you typed is unsuitable, please type again:"
-                        user_choice = raw_input()
-                        continue
-	else:
-		print "You typed wrong please try again:"
-		user_choice = raw_input()
-		continue
+if user_choice.isdigit():
+	user_choice = int(user_choice)
+	if user_choice == 0:
+		print "you typed 0, please try again:"
+		user_choice = raw_input()	
+        try:
+        	user_choice = int(user_choice) - 1
+		city = cities_list[user_choice]
+                city = city.strip().replace(" ", "-")
+        except IndexError:
+        	print "the number you typed is unsuitable, please type again:"
+                user_choice = raw_input()
+else:
+	print "You typed wrong please run the program and try again"
+	sys.exit()
 
 
 
