@@ -17,6 +17,10 @@ parser.add_option("-c", "--country",
                  action = "store", type = "string",dest = "country",
 		 help = "This option will print all the cities insdie the choosen country")
 
+parser.add_option("-a", "--average",
+                 action = "store", type = "string",dest = "average",
+		 help = "This option will print all the average tempreature of the choosen country")
+
 
 parser.parse_args()
 
@@ -51,7 +55,9 @@ else:
 		sys.exit()
 #converting the country name to the country initials for further actions
 attempt = 0
-while True:
+data = None
+while not data and attempt <3:
+	attempt +=1
 	try:
 		data = urllib.urlopen('http://openweathermap.org/help/city_list.txt')
 		cities_list = list()
@@ -66,14 +72,11 @@ while True:
 	       			print i,city
 				#Printing each city of the country with a number for the user to choose from
 	      			i+=1
-		break
-	except IOError:
-		print "your internet connection is not working, please check your internet connection"
-		attempt += 1
-		if attempt == 3:
-			print "the program fail, please check your internt and access the program again"
-			sys.exit()
-		continue
+	except:
+		 print "failed %d times, trying again" % attempt
+if not data:
+	print "the program fail, please check your internt and access the program again"
+	sys.exit()
 
 user_choice = raw_input("Please type the nubmer of city you would like to check the weather: ")
 #Checking if the user's input is an interger and that the same interger is next to a city above and not equal to 0
@@ -87,8 +90,8 @@ if user_choice.isdigit():
 		city = cities_list[user_choice]
                 city = city.strip().replace(" ", "-")
         except IndexError:
-        	print "the number you typed is unsuitable, please type again:"
-                user_choice = raw_input()
+        	print "the number you typed is unsuitable, please run the program and try again"
+                sys.exit()
 else:
 	print "You typed wrong please run the program and try again"
 	sys.exit()
@@ -97,8 +100,10 @@ else:
 
 
 #Taking the city that the user choose and checking all the weather attributes in the "open weather" API
-attempt_3 = 0
-while  True:
+attempt = 0
+response = None
+while not response and attempt < 3:
+	attempt +=1
 	try:
 		url = 'http://api.openweathermap.org/data/2.5/weather?q='+ city +'&appid=9aa4492b034cef3250be6f72629b73e9'
 		values = {}
@@ -120,14 +125,12 @@ while  True:
 		temp_max = data['main']['temp_max']
 		temp_max = float(temp_max-273)
 		print "The maximum temperature in " +city+ " is " + str(round(temp_max,1)) + "°C"
-		break
 	except:		
-		print "your internet connection is not working, please check your internet connection"
-		attempt_3 += 1
-		if attempt_3 == 3:
-			print "the program fail, please check your internt and access the program again"
-			sys.exit()
-		continue
+		print "failed %d times, trying again" % attempt
+
+if not response:
+	print "the program fail, please check your internt and access the program again"
+	sys.exit()
 
 parser = OptionParser(usage = "Weather forecast software",
                 description = "Welcome to Weather across the world, please choose and option:")
