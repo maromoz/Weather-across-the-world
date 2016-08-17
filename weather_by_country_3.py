@@ -26,8 +26,10 @@ country = options.country
 #Checking for the user's input type(should be a country name)
 if country.isalpha():
         #Checking the user internet connection
+	response = None
         attempt = 0
-        while attempt <3:
+        while not response and attempt <3:
+		attempt += 1
                 try:
          		response = unirest.get("https://restcountries-v1.p.mashape.com/name/"+country,
  	                headers={"X-Mashape-Key": "26D2fnt4QPmshTRjJ8zhI6oDR03dp11be9KjsnRxxFLkVPpVbG",
@@ -35,11 +37,10 @@ if country.isalpha():
                     		    )
                  	break
 		except: 
-                       	print "your internet connection is not working, please check your internet connection"
-                        attempt += 1
-                        if attempt == 3:
-                        	print "the program fail, please check your internt and access the program again"
-				sys.exit()
+                       	print "failed %d times, trying again" % attempt
+        if not response:
+        	print "the program fail, please check your internt and access the program again"
+		sys.exit()
 	try:
 		country_initials = response.body[0]["alpha2Code"]
 	except KeyError: 
@@ -49,7 +50,7 @@ else:
 		print "You typed wrong please run the program try again"
 		sys.exit()
 #converting the country name to the country initials for further actions
-attempt_2 = 0
+attempt = 0
 while True:
 	try:
 		data = urllib.urlopen('http://openweathermap.org/help/city_list.txt')
@@ -68,8 +69,8 @@ while True:
 		break
 	except IOError:
 		print "your internet connection is not working, please check your internet connection"
-		attempt_2 += 1
-		if attempt_2 == 3:
+		attempt += 1
+		if attempt == 3:
 			print "the program fail, please check your internt and access the program again"
 			sys.exit()
 		continue
