@@ -20,7 +20,7 @@ def country_temprature_callback(option, opt_str, value, parser):
 
 #######################################################################################################
 def country_temprature(is_average):
-	country = sys.argv[2]
+	country = sys.argv[3]
 	#Checking for the user's input type(should be a country name)
 	if not country.isalpha():
 		print "You typed wrong please run the program try again"
@@ -133,6 +133,8 @@ def country_temprature(is_average):
 					temp_max = float(temp_max-273)
 					temp_max_average += temp_max
 					average_counter += 1
+					if average_counter == 5:
+						break
 
 				temp_average = temp_average / average_counter
 				pressure_average = pressure_average / average_counter
