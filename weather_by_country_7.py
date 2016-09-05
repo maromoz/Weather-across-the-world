@@ -35,8 +35,7 @@ options, args = parser.parse_args()
 
 
 #######################################################################################################
-def city_temprature():
-        country = country_via_commandline
+def city_temprature(country):
         #Checking for the user's input type(should be a country name)
         if not country.isalpha():
         	print "You typed wrong please run the program try again"
@@ -117,8 +116,7 @@ def city_temprature():
 
 
 
-def country_average_temprature():
-        country = country_via_commandline
+def country_average_temprature(country):
         #Checking for the user's input type(should be a country name)
         if not country.isalpha():
                 print "You typed wrong please run the program try again"
@@ -157,11 +155,11 @@ def country_average_temprature():
 
 
 is_average = parser.values.average
-country_via_commandline = options.country
+country = options.country
 if is_average:
-        country_average_temprature()
+        country_average_temprature(country)
 else:
-        city_temprature()
+        city_temprature(country)
 sys.exit()
 
 
